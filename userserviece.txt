@@ -1,3 +1,30 @@
 print any test 
 print("serviece established successfully")
 
+
+import re
+from playwright.sync_api import Playwright, sync_playwright, expect
+
+
+def run(playwright: Playwright) -> None:
+    browser = playwright.chromium.launch(headless=False)
+    context = browser.new_context()
+    page = context.new_page()
+    page.goto("https://qmskpi-test.app.nokia.com/apps/qmm2/login.aspx?ReturnUrl=%2fapps%2fqmm2%2fadmin%2fproductionmgmt.aspx")
+    page.locator("#ctl00_ContentPlaceHolder1_txtCSL").click()
+    page.locator("#ctl00_ContentPlaceHolder1_txtCSL").fill("qsupport")
+    page.locator("#ctl00_ContentPlaceHolder1_txtCIP").click()
+    page.locator("#ctl00_ContentPlaceHolder1_txtCIP").fill("@1bgl%123")
+    page.get_by_role("button", name="Login").click()
+    page.get_by_role("link", name="Measurement Import", exact=True).click()
+    page.locator("#ctl00_ContentPlaceHolder1_uxLovPeriod").select_option("2024-01")
+    page.get_by_role("link", name="Admin").click()
+    page.once("dialog", lambda dialog: dialog.dismiss())
+    page.get_by_role("button", name="Import").click()
+    page1 = context.new_page()
+    page1.close()
+
+    # ---------------------
+    context.close()
+    browser.close()
+
